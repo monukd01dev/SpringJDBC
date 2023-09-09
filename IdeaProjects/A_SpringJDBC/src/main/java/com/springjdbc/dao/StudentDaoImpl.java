@@ -33,4 +33,18 @@ public class StudentDaoImpl implements StudentDao {
         int r = template.update(query, student.getId(), student.getName(), student.getCity());
         return r;
     }
+
+    @Override
+    public int change(Student student) {
+        String query = "update student set name=? , city=? where id=?";
+        int r = template.update(query, student.getName(), student.getCity(), student.getId());
+        return r;
+    }
+
+    @Override
+    public int delete(int studentId) {
+        String query = "delete from student where id=?";
+        int r = template.update(query, studentId);
+        return r;
+    }
 }
