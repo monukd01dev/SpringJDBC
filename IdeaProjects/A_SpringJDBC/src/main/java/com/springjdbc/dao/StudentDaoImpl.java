@@ -13,11 +13,23 @@ package com.springjdbc.dao;
 */
 
 import com.springjdbc.entities.Student;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
+import java.util.List;
+
+@Component("studentDao")
 public class StudentDaoImpl implements StudentDao {
 
     private JdbcTemplate template;
+
+    @Autowired
+    public StudentDaoImpl(JdbcTemplate template) {
+        this.template = template;
+    }
 
     public JdbcTemplate getTemplate() {
         return template;
@@ -47,4 +59,19 @@ public class StudentDaoImpl implements StudentDao {
         int r = template.update(query, studentId);
         return r;
     }
+
+    @Override
+    public Student getStudent(int studentId) {
+        String query = "select * from student where id=?";
+        RowMapper<Student> rowmapper = new RowMapperImpl();
+        return this.template.queryForObject(query, rowmapper, studentId);
+    }
+
+    @Override
+    public List<Student> getAllStudent() {
+        String query = "select * from student";
+        RowMapper<Student> rowmapper = new RowMapperImpl();
+        return this.template.query(query,rowmapper);
+    }
+
 }
